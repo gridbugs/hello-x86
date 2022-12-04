@@ -12,11 +12,11 @@ let
       rev = "6b56345f01de7081f4021fd60d969c2df0932674";
       sha256 = "sha256-GiDVffPE7nS+GSjWb8Kq9HzW4zOS8pYfngw3k3EPrpM=";
     };
-    buildInputs = [ zip ];
+    buildInputs = [ zip unzip ];
     makeFlags = [ "-C" "mkbootimg" "mkbootimg" ];
     installPhase = ''
       mkdir -p $out/bin
-      cp mkbootimg/mkbootimg $out/bin
+      unzip mkbootimg-Linux.zip mkbootimg -d $out/bin
     '';
   };
 in
