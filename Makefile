@@ -4,7 +4,7 @@ STRIP ?= strip
 MKBOOTIMG ?= mkbootimg
 QEMU ?= qemu-system-x86_64
 
-CFLAGS = -Werror -Wall -fpic -ffreestanding -fno-stack-protector -nostdlib
+CFLAGS = -Werror -Wall -fpic -ffreestanding -fno-stack-protector -fcf-protection=none -nostdlib -O0
 
 kernel.elf: putc.S main.c
 	$(CC) $(CFLAGS) -mno-red-zone -c main.c -o main.o
