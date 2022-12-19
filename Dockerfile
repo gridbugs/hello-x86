@@ -1,6 +1,15 @@
-FROM alpine
+FROM ubuntu
 
-RUN apk add binutils make gcc git musl-dev zip qemu-system-x86_64
+RUN apt-get update && apt-get install -y \
+  git \
+  build-essential \
+  zip \
+  gcc-multilib-x86-64-linux-gnu \
+  qemu-system-x86 \
+  bash \
+  sudo \
+  file \
+  ;
 
 # Install the bootboot tool
 RUN git clone https://gitlab.com/bztsrc/bootboot.git /tmp/bootboot && \
@@ -10,10 +19,13 @@ RUN git clone https://gitlab.com/bztsrc/bootboot.git /tmp/bootboot && \
   cp mkbootimg /usr/local/bin
 
 # Make a non-root user and copy the code into their home directory
-RUN adduser -D user
+RUN useradd --create-home --shell /bin/bash --gid users --groups sudo user
 USER user
 ADD --chown=user . src
 WORKDIR src
 
-# Build this project
-RUN make clean && make kernel.img
+ENV CC=x86_64-linux-gnu-gcc
+ENV LD=x86_64-linux-gnu-ld
+ENV STRIP=x86_64-linux-gnu-strip
+
+RUN make
