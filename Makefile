@@ -4,7 +4,9 @@ STRIP ?= strip
 MKBOOTIMG ?= mkbootimg
 QEMU ?= qemu-system-x86_64
 
-CFLAGS = -Werror -Wall -fpic -ffreestanding -fno-stack-protector -fcf-protection=none -nostdlib -O0
+CFLAGS = -Werror -Wall -fpic -ffreestanding -fno-stack-protector -fcf-protection=none -nostdlib -fno-builtin -O2
+
+all: kernel.img
 
 kernel.elf: putc.S main.c
 	$(CC) $(CFLAGS) -mno-red-zone -c main.c -o main.o
@@ -28,4 +30,7 @@ run-graphical: kernel.img
 run-debug: kernel.img
 	$(QEMU) -drive file=$^,format=raw -serial stdio -display none -no-shutdown -no-reboot -d int -s -S
 
-.PHONY: clean run run-graphical run-debug
+gdb-kernel:
+	gdb -x kernel.gdb
+
+.PHONY: clean run run-graphical run-debug all

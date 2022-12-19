@@ -25,5 +25,6 @@ mkShell {
     binutils
     mkbootimg
     qemu
+    gdb
   ];
 }
